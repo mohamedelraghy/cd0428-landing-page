@@ -29,6 +29,12 @@ const navbarList = document.getElementById("navbar__list");
 //* select all sections
 const sections = document.querySelectorAll("section");
 
+//* Select the navigation bar
+const navbar = document.querySelector(".page__header");
+
+//* Variable to keep track of scrolling activity
+let isScrolling;
+
 /**
  * End Global Variables
  * Start Helper Functions
@@ -91,6 +97,12 @@ function setActiveSection() {
 function hideNavbar() {
   navbar.style.top = "-50px"; // Slide the navbar up (you can adjust the value as needed)
 }
+
+// Function to show the navigation bar
+function showNavbar() {
+  navbar.style.top = "0"; // Show the navbar
+}
+
 /**
  * End Helper Functions
  * Begin Events
@@ -101,6 +113,21 @@ window.addEventListener("scroll", setActiveSection);
 
 // Call the function to build the navigation when the DOM content is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
+  showNavbar();
   buildNav();
   setActiveSection(); // Set the initial active section
+});
+
+// Add an event listener for the scroll event
+window.addEventListener("scroll", function () {
+  // Clear the timeout if it's already set
+  window.clearTimeout(isScrolling);
+
+  // Show the navbar when scrolling starts
+  showNavbar();
+
+  // Set a timeout to hide the navbar after scrolling stops (2 seconds delay)
+  isScrolling = setTimeout(function () {
+    hideNavbar();
+  }, 2000); // 2000ms = 2 seconds of inactivity before hiding the navbar
 });
