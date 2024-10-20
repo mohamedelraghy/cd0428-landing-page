@@ -35,12 +35,6 @@ const sections = document.querySelectorAll("section");
  *
  */
 
-/**
- * End Helper Functions
- * Begin Main Functions
- *
- */
-
 // build the nav
 function buildNav() {
   //* loop through sections and create the navbar dynamically
@@ -54,6 +48,13 @@ function buildNav() {
     link.textContent = section.getAttribute("data-nav");
     link.classList.add("menu__link");
 
+    // Add click event listener for smooth scrolling
+    link.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent default anchor click behavior
+
+      // Scroll to the section smoothly
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
     // * append the link to the list item
     listItem.appendChild(link);
@@ -85,6 +86,11 @@ function setActiveSection() {
     }
   });
 }
+/**
+ * End Helper Functions
+ * Begin Events
+ *
+ */
 
 window.addEventListener("scroll", setActiveSection);
 
@@ -93,17 +99,3 @@ document.addEventListener("DOMContentLoaded", () => {
   buildNav();
   setActiveSection(); // Set the initial active section
 });
-
-// Scroll to anchor ID using scrollTO event
-
-/**
- * End Main Functions
- * Begin Events
- *
- */
-
-// Build menu
-
-// Scroll to section on link click
-
-// Set sections as active
