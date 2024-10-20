@@ -86,6 +86,11 @@ function setActiveSection() {
     }
   });
 }
+
+// Function to hide the navigation bar
+function hideNavbar() {
+  navbar.style.top = "-50px"; // Slide the navbar up (you can adjust the value as needed)
+}
 /**
  * End Helper Functions
  * Begin Events
