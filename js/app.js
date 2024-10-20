@@ -1,181 +1,131 @@
 /**
- *
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
- *
- * Dependencies: None
- *
+ * DOM Manipulation Exercise.
+ * Builds dynamic navigation, smooth scrolls to anchors,
+ * highlights sections in the viewport upon scrolling,
+ * and adds collapsible functionality.
+ * 
  * JS Version: ES2015/ES6
- *
  * JS Standard: ESlint
- *
  */
 
 /**
- * Comments should be present at the beginning of each procedure and class.
- * Great to have comments before crucial code sections within the procedure.
+ * Global Variables
  */
-
-/**
- * Define Global Variables
- *
- */
-
-//* Select the navbar unordered list
+// Navbar elements
 const navbarList = document.getElementById("navbar__list");
-
-//* select all sections
-const sections = document.querySelectorAll("section");
-
-//* Select the navigation bar
 const navbar = document.querySelector(".page__header");
 
-//* Variable to keep track of scrolling activity
-let isScrolling;
-
-// Get the button
+// Sections and button
+const sections = document.querySelectorAll("section");
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-// Select all collapsible headers
-const collapsibleHeaders = document.querySelectorAll(".collapsible");
+// Scroll activity tracker
+let isScrolling;
 
 /**
- * End Global Variables
- * Start Helper Functions
- *
+ * Helper Functions
  */
-// Function to scroll to top smoothly
-function scrollToTop() {
+
+// Scroll smoothly to the top of the page
+const scrollToTop = () => {
   window.scrollTo({
     top: 0,
-    behavior: "smooth", // Smooth scrolling behavior
+    behavior: "smooth",
   });
-}
+};
 
-// build the nav
-function buildNav() {
-  //* loop through sections and create the navbar dynamically
+// Build navigation menu dynamically from sections
+const buildNav = () => {
   sections.forEach((section) => {
-    //* create a new listItem
     const listItem = document.createElement("li");
-
-    // * create a new link inside the list item and set its href attribute to the section ID
     const link = document.createElement("a");
+
+    // Set href and text for the menu item
     link.href = `#${section.id}`;
     link.textContent = section.getAttribute("data-nav");
     link.classList.add("menu__link");
 
-    // Add click event listener for smooth scrolling
-    link.addEventListener("click", function (event) {
-      event.preventDefault(); // Prevent default anchor click behavior
-
-      // Scroll to the section smoothly
+    // Smooth scroll to section on click
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
       section.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    // * append the link to the list item
+    // Append link to list item and list item to navbar
     listItem.appendChild(link);
-
-    //* append the list item to the navbar
-    navbarList.append(listItem);
+    navbarList.appendChild(listItem);
   });
-}
+};
 
-// Add class 'active' to section when near top of viewport
-//* function to detect the section in view
-function setActiveSection() {
+// Add 'active' class to section in viewport and corresponding nav link
+const setActiveSection = () => {
   sections.forEach((section) => {
     const rect = section.getBoundingClientRect();
 
-    //* check if the section is in view
     if (rect.top >= -50 && rect.top <= 250) {
-      console.log({ rect });
-      // Remove active class from all sections and links
+      // Clear active state for all sections and links
       sections.forEach((sec) => sec.classList.remove("your-active-class"));
       document
         .querySelectorAll(".menu__link")
         .forEach((link) => link.classList.remove("active-link"));
 
-      // Add active class to the section in view and its corresponding nav link
+      // Set active state for the section in view and its corresponding link
       section.classList.add("your-active-class");
       const activeLink = document.querySelector(`a[href="#${section.id}"]`);
       activeLink.classList.add("active-link");
     }
   });
-}
+};
 
-//* Function to hide the navigation bar
-function hideNavbar() {
-  navbar.style.top = "-50px"; // Slide the navbar up (you can adjust the value as needed)
-}
+// Hide the navbar when scrolling stops
+const hideNavbar = () => {
+  navbar.style.top = "-50px"; // Adjust as needed
+};
 
-//* Function to show the navigation bar
-function showNavbar() {
-  navbar.style.top = "0"; // Show the navbar
-}
+// Show the navbar when scrolling starts
+const showNavbar = () => {
+  navbar.style.top = "0";
+};
 
-//* Function to scroll to top smoothly
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth", // Smooth scrolling behavior
-  });
-}
+// Toggle collapsible content visibility
+const toggleCollapsibleContent = (header) => {
+  const content = header.nextElementSibling;
+  content.style.display = content.style.display === "block" ? "none" : "block";
+};
 
 /**
- * End Helper Functions
- * Begin Events
- *
+ * Event Listeners
  */
 
-window.addEventListener("scroll", setActiveSection);
-
-// Call the function to build the navigation when the DOM content is fully loaded
+// Build the navigation menu and set initial active section when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   showNavbar();
   buildNav();
-  setActiveSection(); // Set the initial active section
+  setActiveSection();
 });
 
-// Add an event listener for the scroll event
-window.addEventListener("scroll", function () {
-  // Clear the timeout if it's already set
-  window.clearTimeout(isScrolling);
+// Add scroll event listener to manage active section highlighting
+window.addEventListener("scroll", setActiveSection);
 
-  // Show the navbar when scrolling starts
+// Manage navbar visibility on scroll
+window.addEventListener("scroll", () => {
+  // Show navbar during scroll
   showNavbar();
 
-  // Set a timeout to hide the navbar after scrolling stops (2 seconds delay)
-  isScrolling = setTimeout(function () {
-    hideNavbar();
-  }, 2000); // 2000ms = 2 seconds of inactivity before hiding the navbar
+  // Clear previous timeout and hide navbar after 2 seconds of inactivity
+  clearTimeout(isScrolling);
+  isScrolling = setTimeout(hideNavbar, 2000);
 });
 
-// Add an event listener to the scroll event
-window.addEventListener("scroll", function () {
-  // Show the button when the user scrolls down 300px from the top of the document
-  if (window.scrollY > 300) {
-    scrollToTopBtn.style.display = "block";
-  } else {
-    scrollToTopBtn.style.display = "none";
-  }
+// Show or hide 'Scroll to Top' button based on scroll position
+window.addEventListener("scroll", () => {
+  scrollToTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
 });
 
-//* Add click event to the button
+// Smooth scroll to top on button click
 scrollToTopBtn.addEventListener("click", scrollToTop);
 
 // Add click event listener to each collapsible header
-collapsibleHeaders.forEach((header) => {
-  header.addEventListener("click", function () {
-    // Toggle the content visibility
-    const content = this.nextElementSibling; // Get the next sibling (the content div)
-
-    if (content.style.display === "block") {
-      content.style.display = "none"; // Hide content
-    } else {
-      content.style.display = "block"; // Show content
-    }
-  });
+document.querySelectorAll(".collapsible").forEach((header) => {
+  header.addEventListener("click", () => toggleCollapsibleContent(header));
 });
