@@ -35,11 +35,24 @@ const navbar = document.querySelector(".page__header");
 //* Variable to keep track of scrolling activity
 let isScrolling;
 
+// Get the button
+const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+// Select all collapsible headers
+const collapsibleHeaders = document.querySelectorAll(".collapsible");
+
 /**
  * End Global Variables
  * Start Helper Functions
  *
  */
+// Function to scroll to top smoothly
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Smooth scrolling behavior
+  });
+}
 
 // build the nav
 function buildNav() {
@@ -93,14 +106,22 @@ function setActiveSection() {
   });
 }
 
-// Function to hide the navigation bar
+//* Function to hide the navigation bar
 function hideNavbar() {
   navbar.style.top = "-50px"; // Slide the navbar up (you can adjust the value as needed)
 }
 
-// Function to show the navigation bar
+//* Function to show the navigation bar
 function showNavbar() {
   navbar.style.top = "0"; // Show the navbar
+}
+
+//* Function to scroll to top smoothly
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Smooth scrolling behavior
+  });
 }
 
 /**
@@ -130,4 +151,31 @@ window.addEventListener("scroll", function () {
   isScrolling = setTimeout(function () {
     hideNavbar();
   }, 2000); // 2000ms = 2 seconds of inactivity before hiding the navbar
+});
+
+// Add an event listener to the scroll event
+window.addEventListener("scroll", function () {
+  // Show the button when the user scrolls down 300px from the top of the document
+  if (window.scrollY > 300) {
+    scrollToTopBtn.style.display = "block";
+  } else {
+    scrollToTopBtn.style.display = "none";
+  }
+});
+
+//* Add click event to the button
+scrollToTopBtn.addEventListener("click", scrollToTop);
+
+// Add click event listener to each collapsible header
+collapsibleHeaders.forEach((header) => {
+  header.addEventListener("click", function () {
+    // Toggle the content visibility
+    const content = this.nextElementSibling; // Get the next sibling (the content div)
+
+    if (content.style.display === "block") {
+      content.style.display = "none"; // Hide content
+    } else {
+      content.style.display = "block"; // Show content
+    }
+  });
 });
