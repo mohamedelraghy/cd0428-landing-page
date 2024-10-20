@@ -23,6 +23,12 @@
  *
  */
 
+//* Select the navbar unordered list
+const navbarList = document.getElementById("navbar__list");
+
+//* select all sections
+const sections = document.querySelectorAll("section");
+
 /**
  * End Global Variables
  * Start Helper Functions
@@ -36,32 +42,57 @@
  */
 
 // build the nav
+function buildNav() {
+  //* loop through sections and create the navbar dynamically
+  sections.forEach((section) => {
+    //* create a new listItem
+    const listItem = document.createElement("li");
 
-//* Select the navbar unordered list
-const navbarList = document.getElementById("navbar__list");
+    // * create a new link inside the list item and set its href attribute to the section ID
+    const link = document.createElement("a");
+    link.href = `#${section.id}`;
+    link.textContent = section.getAttribute("data-nav");
+    link.classList.add("menu__link");
 
-//* select all sections
-const sections = document.querySelectorAll("section");
 
-//* loop through sections and create the navbar dynamically
-sections.forEach((section) => {
-  //* create a new listItem
-  const listItem = document.createElement("li");
+    // * append the link to the list item
+    listItem.appendChild(link);
 
-  // * create a new link inside the list item and set its href attribute to the section ID
-  const link = document.createElement("a");
-  link.href = `#${section.id}`;
-  link.textContent = section.getAttribute("data-nav");
-  link.classList.add("menu__link");
-
-  // * append the link to the list item
-  listItem.appendChild(link);
-
-  //* append the list item to the navbar
-  navbarList.append(listItem);
-});
+    //* append the list item to the navbar
+    navbarList.append(listItem);
+  });
+}
 
 // Add class 'active' to section when near top of viewport
+//* function to detect the section in view
+function setActiveSection() {
+  sections.forEach((section) => {
+    const rect = section.getBoundingClientRect();
+
+    //* check if the section is in view
+    if (rect.top >= -50 && rect.top <= 250) {
+      console.log({ rect });
+      // Remove active class from all sections and links
+      sections.forEach((sec) => sec.classList.remove("your-active-class"));
+      document
+        .querySelectorAll(".menu__link")
+        .forEach((link) => link.classList.remove("active-link"));
+
+      // Add active class to the section in view and its corresponding nav link
+      section.classList.add("your-active-class");
+      const activeLink = document.querySelector(`a[href="#${section.id}"]`);
+      activeLink.classList.add("active-link");
+    }
+  });
+}
+
+window.addEventListener("scroll", setActiveSection);
+
+// Call the function to build the navigation when the DOM content is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  buildNav();
+  setActiveSection(); // Set the initial active section
+});
 
 // Scroll to anchor ID using scrollTO event
 
