@@ -248,10 +248,11 @@ section.your-active-class .landing__container::after {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-* style for the active navigation link */ .active-link {
-  color: #00ecb9;
+/* style for the active navigation link */
+.active-link {
   font-weight: bold;
   border-bottom: 2px solid #00ecb9;
+  background-color: #00ecb9;
 }
 
 /* Scroll to Top Button Styles */
